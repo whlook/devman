@@ -28,13 +28,15 @@ report() {
 	cpu=`top -n 1|head -n10 | grep "CPU:"`
 	load=`uptime`
 	tm=`date`
-	info="title:$title,ip:$ip,mac:$mac,devid:$uuid,mem:$mem,cpu:$cpu,load:$load,date:$tm"
-	nohup wget -U "$info" $url -O /dev/null >  /dev/null 2>&1
+	#TODO add private key report
+	info="{\"title\":\"$title\",\"ip\":\"$ip\",\"mac\":\"$mac\",\"devid\":\"$uuid\",\"mem\":\"$mem\",\"cpu\":\"$cpu\",\"load\":\"$load\",\"date\":\"$tm\"}"
+	ret=`wget -q -U "$info" $url -O -`
+	#TODO process ret
 }
 
 while true
 do
-	report "mstar359g" "http://10.4.50.23:5050/v1/report"
+	report "somedevice" "http://192.168.1.11:5050/v1/report"
 	sleep 10
 done
 

@@ -5,12 +5,23 @@ import uvicorn
 
 import time
 import asyncio
+import json
 
 app = FastAPI()
 
 @app.get("/v1/report")
 async def rep(request:Request):
     print(request.headers)
+    devinfo = request.headers['user-agent']
+    devinfo=devinfo.replace("\x1b","").strip()
+    #TODO add private key check
+    try:
+        info = json.loads(devinfo)
+        print(info['title'])
+        #TODO process info
+    except Exception:
+        print("error")
+    #TODO useful ret
     return {"code"}
 
 if __name__ == "__main__":
