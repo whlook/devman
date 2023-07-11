@@ -11,3 +11,7 @@ nohup sh device_report.sh & # run on client devices
 ```
 python3 api_server.py # run on host
 ```
+
+## Todo
+
+- [ ] support remote shell execute (server --> client --> shell)

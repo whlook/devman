@@ -37,6 +37,6 @@ report() {
 while true
 do
 	report "somedevice" "http://192.168.1.11:5050/v1/report"
-	sleep 10
+	sleep 5
 done
 
