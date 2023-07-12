@@ -20,9 +20,11 @@ def get_time(delta_days = 0)->str:
 
 @app.get("/")
 async def index(request:Request):
-    html="<head><style>.code-block { background-color: #1e1e1e; color:#ffffff; padding: 10px; border-radius: 8px; font-family: monospace; }</style></head>"
+    html=f"<head><title>{len(gmap)}devices</title>"
+    html= html+"<style>.code-block { background-color: #1e1e1e; color:#ffffff; padding: 10px; border-radius: 8px; font-family: monospace; }</style></head>"
     html = html+" <script> setInterval(function(){ location.reload(); }, 3000); </script>"
     html = html+f"<h><big>&nbsp;&nbsp;  {len(gmap)} &nbsp; devices &nbsp; online &nbsp; | &nbsp; </big><big>{get_time()}</big></h>"
+
     for k,v in gmap.items():
         html = html + f"<div><pre style=\"padding: 10px;\"><code class=\"code-block\">{v}</code></pre></div>"
 

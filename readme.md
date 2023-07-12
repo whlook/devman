@@ -14,4 +14,5 @@ python3 api_server.py # run on host
 
 ## Todo
 
-- [ ] support remote shell execute (server --> client --> shell)
+- [ ] support remote shell execute (server --> client --> shell|base64| --> server)
+- [ ] use sftp?
