@@ -13,6 +13,7 @@ app = FastAPI()
 
 update = {}
 gmap = {}
+validmap = {}
 
 def get_time(delta_days = 0)->str:
     dt = (datetime.datetime.now()+datetime.timedelta(days=delta_days)).strftime("%Y-%m-%d %H:%M:%S")
@@ -20,18 +21,26 @@ def get_time(delta_days = 0)->str:
 
 @app.get("/")
 async def index(request:Request):
-    html=f"<head><title>{len(gmap)}devices</title>"
+    html=f"<head><title>{len(validmap)}devices</title>"
     html= html+"<style>.code-block { background-color: #1e1e1e; color:#ffffff; padding: 10px; border-radius: 8px; font-family: monospace; }</style></head>"
     html = html+" <script> setInterval(function(){ location.reload(); }, 3000); </script>"
-    html = html+f"<h><big>&nbsp;&nbsp;  {len(gmap)} &nbsp; devices &nbsp; online &nbsp; | &nbsp; </big><big>{get_time()}</big></h>"
+    html = html+f"<h><big>&nbsp;&nbsp;  {len(validmap)} &nbsp; devices &nbsp; online &nbsp; | &nbsp; </big><big>{get_time()}</big></h>"
 
+    html = html + f"<div>ONLINE:</div>"
     for k,v in gmap.items():
-        html = html + f"<div><pre style=\"padding: 10px;\"><code class=\"code-block\">{v}</code></pre></div>"
+        if k in update.keys() and time.time() - update[k] < 60:
+            #html = html + f"<div>OFFLINE:<pre style=\"padding: 10px;\"><code class=\"code-block\">{v}</code></pre></div>"
+            html = html + f"<div><pre style=\"padding: 10px;\"><code class=\"code-block\">{v}</code></pre></div>"
+
+    html = html + f"<div>OFFLINE:</div>"
+    for k,v in gmap.items():
+        if k in update.keys() and time.time() - update[k] > 60:
+            html = html + f"<div>OFFLINE:<pre style=\"padding: 10px;\"><code class=\"code-block\">{v}</code></pre></div>"
 
     for k,v in update.items():
         if time.time() - v > 60:
-            if k in gmap.keys():
-                del gmap[k]
+            if k in validmap.keys():
+                del validmap[k]
 
     return HTMLResponse(content=html,status_code=200)
 
@@ -45,6 +54,7 @@ async def rep(request:Request):
         info = json.loads(devinfo)
         #TODO process info
         devid=info['devid']
+        validmap[devid]=devinfo
         gmap[devid]=devinfo
         update[devid]=time.time()
     except Exception:
